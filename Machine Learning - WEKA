@@ -1,0 +1,61 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.Scanner;
+import weka.classifiers.trees.J48;
+import weka.core.Attribute;
+import weka.core.DenseInstance;
+import weka.core.Instance;
+import weka.core.Instances;
+
+
+public class ML {
+
+	public static void main(String[] args) throws Exception {
+				
+		  //Iniciating some parameters
+			int indexclassificador = 3;
+			int numatributos = 4;
+	    
+			//Reading the database which will learned from
+		  FileReader in = new FileReader("Source of the data");
+		  BufferedReader br = new BufferedReader(in);
+		    
+		  //Defining the class that will be classified
+		  Instances ins = new Instances(br);		    
+		  ins.setClassIndex(indexclassificador);
+		    
+		  //Calling the J48 algorithm
+			J48 j = new J48();
+		  j.buildClassifier(ins);	    
+		    
+		  Scanner scanner = new Scanner(new FileReader("Source of the file to be classified"));
+		    	while (scanner.hasNext()) {
+		    		
+		    		String linha = scanner.next();
+		    		String[] vet = linha.split(",");
+		    		int val1 = Integer.valueOf(vet[0]).intValue();
+		    		int val2 = Integer.valueOf(vet[1]).intValue();
+		    		int val3 = Integer.valueOf(vet[2]).intValue();
+		 		    	 	
+		    		Instance novo = new DenseInstance(numatributos);
+		    		
+		    		novo.setDataset(ins);
+		  			novo.setValue(0, val1);
+			  		novo.setValue(1, val2);
+				  	novo.setValue(2, val3);
+		    
+			//Result 
+			
+			double result = j.classifyInstance(novo);
+			Attribute a = ins.attribute(indexclassificador);
+			String predresult = a.value((int) result);
+			System.out.println("Classificacao: " + predresult);
+			
+			
+			
+		    }
+	          
+	}
+
+}
+
